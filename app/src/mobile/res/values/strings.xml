@@ -117,9 +117,14 @@
     <string name="subscription_gate_enable">Enable</string>
     <string name="subscription_gate_code_required">Enter the 4-digit passcode</string>
     <string name="subscription_gate_wrong_code">Wrong passcode</string>
-    <string name="subscription_gate_unreachable">Cannot reach the verification service. Check the network or the GitHub proxy setting.</string>
+    <string name="subscription_gate_unreachable">Cannot reach the verification service. Check the network or the GitHub accelerator setting.</string>
     <string name="subscription_gate_unlocked">Enabled, restarting…</string>
     <string name="subscription_in_use">In use</string>
+
+    <!-- GitHub accelerator -->
+    <string name="setting_github_proxy">GitHub accelerator</string>
+    <string name="github_proxy_url">Accelerator URL (include https://)</string>
+    <string name="github_proxy_saved">Accelerator settings saved</string>
 
     <!-- Dialog -->
     <string name="dialog_delete_record">Delete all records?</string>

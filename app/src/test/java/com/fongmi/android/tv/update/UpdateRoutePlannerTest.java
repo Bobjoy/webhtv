@@ -15,7 +15,7 @@ public class UpdateRoutePlannerTest {
             "sha256:" + "1".repeat(64),
             "sha256:" + "2".repeat(64),
             1024);
-    private final GithubProxy.Config direct = GithubProxy.resolve(GithubProxy.DIRECT, "", GithubProxy.MODE_FULL_URL);
+    private final List<GithubProxy.Config> direct = List.of(GithubProxy.resolve(GithubProxy.DIRECT, "", GithubProxy.MODE_FULL_URL));
 
     @Test
     public void ociTriesOciThenGithub() {

@@ -8,7 +8,7 @@ public final class UpdateRoutePlanner {
     private UpdateRoutePlanner() {
     }
 
-    public static List<UpdateTarget> plan(String source, String githubUrl, OciArtifact artifact, GithubProxy.Config githubProxy, String ociEndpoint) {
+    public static List<UpdateTarget> plan(String source, String githubUrl, OciArtifact artifact, List<GithubProxy.Config> githubProxy, String ociEndpoint) {
         List<UpdateTarget> routes = new ArrayList<>();
         String normalized = UpdateSource.normalize(source);
         if (UpdateSource.GITHUB.equals(normalized)) {
@@ -21,11 +21,14 @@ public final class UpdateRoutePlanner {
         return routes;
     }
 
-    private static void addGithub(List<UpdateTarget> routes, String githubUrl, GithubProxy.Config proxy) {
+    private static void addGithub(List<UpdateTarget> routes, String githubUrl, List<GithubProxy.Config> proxy) {
         if (githubUrl == null || githubUrl.trim().isEmpty()) return;
-        try {
-            routes.add(UpdateTarget.github(proxy.rewrite(githubUrl)));
-        } catch (Exception ignored) {
+        for (GithubProxy.Config config : proxy) {
+            try {
+                String url = config.rewrite(githubUrl);
+                if (!routes.stream().anyMatch(item -> url.equals(item.url))) routes.add(UpdateTarget.github(url));
+            } catch (Exception ignored) {
+            }
         }
     }
 

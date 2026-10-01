@@ -692,6 +692,7 @@ public class Setting {
 
     public static void putUpdateGithubProxy(String proxy) {
         Prefers.put("update_github_proxy", GithubProxy.find(proxy).id);
+        putGithubProxyGood("");
     }
 
     public static String getUpdateGithubProxyUrl() {
@@ -700,6 +701,7 @@ public class Setting {
 
     public static void putUpdateGithubProxyUrl(String url) {
         Prefers.put("update_github_proxy_url", url == null ? "" : url.trim());
+        putGithubProxyGood("");
     }
 
     public static String getUpdateGithubProxyMode() {
@@ -708,6 +710,17 @@ public class Setting {
 
     public static void putUpdateGithubProxyMode(String mode) {
         Prefers.put("update_github_proxy_mode", GithubProxy.normalizeMode(mode));
+        putGithubProxyGood("");
+    }
+
+    /** 降级链上次实际命中的那一跳，只在本机有效，改了选择或换了代理即失效。 */
+    public static String getGithubProxyGood() {
+        return Prefers.getString("update_github_proxy_good");
+    }
+
+    public static void putGithubProxyGood(String value) {
+        String target = value == null ? "" : value;
+        if (!target.equals(Prefers.getString("update_github_proxy_good"))) Prefers.put("update_github_proxy_good", target);
     }
 
     public static String getUpdateOciMirror() {

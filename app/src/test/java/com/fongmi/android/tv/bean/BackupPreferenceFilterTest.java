@@ -128,6 +128,7 @@ public class BackupPreferenceFilterTest {
 
         assertFalse(Backup.include("subscription_gate", everything));
         assertFalse(Backup.include("subscription_active_0", everything));
+        assertFalse(Backup.include("update_github_proxy_good", everything));
     }
 
     @Test

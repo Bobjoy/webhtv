@@ -117,9 +117,14 @@
     <string name="subscription_gate_enable">开启</string>
     <string name="subscription_gate_code_required">请输入 4 位授权码</string>
     <string name="subscription_gate_wrong_code">授权码错误</string>
-    <string name="subscription_gate_unreachable">无法连接验证服务，请检查网络或 GitHub 代理设置</string>
+    <string name="subscription_gate_unreachable">无法连接验证服务，请检查网络或 GitHub 加速设置</string>
     <string name="subscription_gate_unlocked">已开启，重启生效</string>
     <string name="subscription_in_use">使用中</string>
+
+    <!-- GitHub 加速 -->
+    <string name="setting_github_proxy">GitHub 加速</string>
+    <string name="github_proxy_url">加速地址（需含 https://）</string>
+    <string name="github_proxy_saved">加速设置已保存</string>
 
     <!-- Dialog -->
     <string name="dialog_delete_record">删除全部纪录？</string>

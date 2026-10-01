@@ -180,6 +180,7 @@ public class Backup {
         if (key.startsWith("remote_trust_")) return false;
         if ("subscription_gate".equals(key)) return false;
         if (key.startsWith("subscription_active_")) return false;
+        if ("update_github_proxy_good".equals(key)) return false;
         if (isWebHomeExtensionPref(key)) return options.isWebHome();
         if (key.startsWith("cache_")) return options.isWebHome() || options.isSpider();
         if (key.startsWith("config_")) return options.isConfig();

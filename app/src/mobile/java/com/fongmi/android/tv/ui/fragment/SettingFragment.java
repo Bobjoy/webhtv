@@ -36,6 +36,7 @@ import com.fongmi.android.tv.ui.dialog.ConfigDialog;
 import com.fongmi.android.tv.ui.dialog.HistoryDialog;
 import com.fongmi.android.tv.ui.dialog.LiveDialog;
 import com.fongmi.android.tv.ui.dialog.RestoreDialog;
+import com.fongmi.android.tv.ui.dialog.GithubProxyDialog;
 import com.fongmi.android.tv.ui.dialog.SubscriptionGateDialog;
 import com.fongmi.android.tv.ui.dialog.BackupProgressDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
@@ -120,6 +121,7 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
         mBinding.live.setOnClickListener(this::onLive);
         mBinding.wall.setOnClickListener(this::onWall);
         mBinding.subscription.setOnClickListener(this::onSubscription);
+        mBinding.githubProxy.setOnClickListener(this::onGithubProxy);
         mBinding.appearance.setOnClickListener(this::onAppearance);
         mBinding.cache.setOnClickListener(this::onCache);
         mBinding.backup.setOnClickListener(this::onBackup);
@@ -240,6 +242,10 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
 
     private void onSubscription(View view) {
         SubscriptionActivity.start(requireActivity());
+    }
+
+    private void onGithubProxy(View view) {
+        GithubProxyDialog.create().show(requireActivity());
     }
 
     /** 订阅门禁入口：2 秒滑动窗口内第 5 次点击标题栏才弹窗（ADR-0007）。 */
