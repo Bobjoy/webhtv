@@ -2,6 +2,8 @@
 -keep class androidx.leanback.widget.** { *; }
 -keep class com.fongmi.quickjs.method.** { *; }
 -keep class com.fongmi.android.tv.bean.** { *; }
+# SubscriptionStore round-trips this class through Gson, so R8 renaming its fields makes every cached item's url null.
+-keep class com.fongmi.android.tv.api.subscription.SubscriptionParser$Item { *; }
 
 # MPV JNI bridge
 -keep class is.xyz.mpv.MPVLib { *; }
