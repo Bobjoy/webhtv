@@ -76,7 +76,7 @@
 
 **次接缝（复用既有，不新建）**：`Backup.include(key, options)`。在 `app/src/test/.../bean/BackupPreferenceFilterTest.java` 里加一条断言：`subscription_gate` 对**所有**同步选项都返回 false，而 `subscription`（订阅列表本体）的行为保持不变。`SubscriptionStoreTest` 现有用例不动。
 
-**不建测试接缝的部分**：连击计数（Fragment 字段 + 时间戳比较）、`EditText` 的 inputType、Toast、以及"点开启→后台线程→写标记→延迟重启"这条编排。它们是 Android 交互与一次性的胶水，用 Robolectric 测只能测到自己 mock 自己。验收方式是真机（M2011K2C，`adb -s a6ce03cc`）+ uiautomator dump 断言节点存在性：
+**不建测试接缝的部分**：连击计数（Fragment 字段 + 时间戳比较）、`EditText` 的 inputType、Toast、以及"点开启→后台线程→写标记→延迟重启"这条编排。它们是 Android 交互与一次性的胶水，用 Robolectric 测只能测到自己 mock 自己。验收方式是 USB 连接的真机 + uiautomator dump 断言节点存在性：
 - 装机后 dump 设置页 → 无 `subscription` 行节点；
 - 连击 5 下（坐标取标题栏中点，间隔 <400ms）→ dump 出现对话框节点且含输入框；
 - 连击 4 下后等 3 秒再连击 4 下 → 无对话框；
