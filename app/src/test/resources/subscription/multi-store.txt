@@ -1,0 +1,19 @@
+//xhz接口  请勿乱填
+//感谢各位收集分享
+{
+	"urls": [
+		{
+			"url": "http://xhztv.top/4k.json",
+			"name": "4K线路"
+		}, // xhz在线视频
+		{
+			"url": "https://tv.菜妮丝.top",
+			"name": "菜妮丝"
+		},
+		/* 下面这条是社区里常见的裸地址形态 */
+		{
+			"url": "https://www.饭太硬.net/tv",
+			"name": "饭太硬"
+		}
+	]
+}

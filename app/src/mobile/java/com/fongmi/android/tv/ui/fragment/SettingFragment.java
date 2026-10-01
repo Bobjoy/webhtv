@@ -11,6 +11,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.Updater;
+import com.fongmi.android.tv.api.config.ConfigActivator;
 import com.fongmi.android.tv.api.config.LiveConfig;
 import com.fongmi.android.tv.api.config.VodConfig;
 import com.fongmi.android.tv.api.config.WallConfig;
@@ -26,6 +27,7 @@ import com.fongmi.android.tv.impl.LiveListener;
 import com.fongmi.android.tv.impl.SiteListener;
 import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.ui.activity.HomeActivity;
+import com.fongmi.android.tv.ui.activity.SubscriptionActivity;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 import com.fongmi.android.tv.ui.dialog.AboutDialog;
 import com.fongmi.android.tv.ui.dialog.AppearanceDialog;
@@ -34,6 +36,7 @@ import com.fongmi.android.tv.ui.dialog.ConfigDialog;
 import com.fongmi.android.tv.ui.dialog.HistoryDialog;
 import com.fongmi.android.tv.ui.dialog.LiveDialog;
 import com.fongmi.android.tv.ui.dialog.RestoreDialog;
+import com.fongmi.android.tv.ui.dialog.SubscriptionGateDialog;
 import com.fongmi.android.tv.ui.dialog.BackupProgressDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
 import com.fongmi.android.tv.utils.AppVersion;
@@ -53,6 +56,8 @@ import java.util.List;
 public class SettingFragment extends BaseFragment implements ConfigListener, SiteListener, LiveListener {
 
     private FragmentSettingBinding mBinding;
+    private int mGateTapCount;
+    private long mGateLastTapAt;
 
     public static SettingFragment newInstance() {
         return new SettingFragment();
@@ -84,6 +89,7 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
+        mBinding.subscription.setVisibility(Setting.isSubscriptionUnlocked() ? View.VISIBLE : View.GONE);
         mBinding.vodUrl.setText(VodConfig.getDesc());
         mBinding.liveUrl.setText(LiveConfig.getDesc());
         setWallText();
@@ -108,10 +114,12 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
 
     @Override
     protected void initEvent() {
+        mBinding.toolbar.setOnClickListener(this::onGateTap);
         mBinding.vod.setOnClickListener(this::onVod);
         mBinding.doh.setOnClickListener(this::setDoh);
         mBinding.live.setOnClickListener(this::onLive);
         mBinding.wall.setOnClickListener(this::onWall);
+        mBinding.subscription.setOnClickListener(this::onSubscription);
         mBinding.appearance.setOnClickListener(this::onAppearance);
         mBinding.cache.setOnClickListener(this::onCache);
         mBinding.backup.setOnClickListener(this::onBackup);
@@ -145,18 +153,7 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
     }
 
     private void load(Config config) {
-        switch (config.getType()) {
-            case 0:
-                VodConfig.load(config, getCallback());
-                break;
-            case 1:
-                LiveConfig.load(config, getCallback());
-                break;
-            case 2:
-                Setting.putWall(0);
-                WallConfig.load(config, getCallback());
-                break;
-        }
+        ConfigActivator.activate(config, getCallback());
     }
 
     private Callback getCallback() {
@@ -240,6 +237,22 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
     private void onDanmaku(View view) {
         getRoot().change(4);
     }
+
+    private void onSubscription(View view) {
+        SubscriptionActivity.start(requireActivity());
+    }
+
+    /** 订阅门禁入口：2 秒滑动窗口内第 5 次点击标题栏才弹窗（ADR-0007）。 */
+    private void onGateTap(View view) {
+        if (Setting.isSubscriptionUnlocked()) return;
+        long now = System.currentTimeMillis();
+        mGateTapCount = now - mGateLastTapAt > 2000 ? 1 : mGateTapCount + 1;
+        mGateLastTapAt = now;
+        if (mGateTapCount < 5) return;
+        mGateTapCount = 0;
+        SubscriptionGateDialog.create().show(requireActivity());
+    }
+
 
     private void onEnhance(View view) {
         getRoot().change(3);
@@ -357,6 +370,12 @@ public class SettingFragment extends BaseFragment implements ConfigListener, Sit
     public void onHiddenChanged(boolean hidden) {
         if (hidden) return;
         setCacheText();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGateTapCount = 0;
     }
 
     @Override

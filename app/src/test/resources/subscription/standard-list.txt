@@ -1,0 +1,23 @@
+{
+	"name": "部署者自己的清单",
+	"list": [
+		{
+			"name": "主线",
+			"url": "http://xhztv.top/4k.json",
+			"logo": "https://xhztv.top/logo.png",
+			"remark": "4K 点播"
+		},
+		{
+			"name": "只有名称和地址",
+			"url": "https://tv.菜妮丝.top"
+		},
+		{
+			"url": "https://www.饭太硬.net/tv",
+			"remark": "名称缺失时用 host 兜底"
+		},
+		{
+			"name": "空地址条目要丢弃",
+			"url": ""
+		}
+	]
+}

@@ -1,0 +1,11 @@
+直播源
+# 接口源
+
+http://xhztv.top/4k.json    #  4K线路
+http://itv.pro//tv/xhz.json    # 徐渣渣接口
+https://tv.菜妮丝.top    #  菜妮丝
+https://www.饭太硬.net/tv
+
+单仓：
+// 整行注释也跳过
+https://www.kefish.xyz/tv    名称在前   #   写法不认

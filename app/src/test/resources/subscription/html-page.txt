@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>接口分享页</title>
+		<link rel="icon" href="https://example.com/favicon.ico" />
+	</head>
+	<body>
+		<!-- 页面里也嵌着地址，但它不是清单：必须判为失败，不能静默返回空列表 -->
+		<p>接口地址：https://tv.菜妮丝.top</p>
+	</body>
+</html>

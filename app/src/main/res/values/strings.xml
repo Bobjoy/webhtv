@@ -1206,7 +1206,7 @@
     <string name="update_settings_source">Download method</string>
     <string name="update_source_github">GitHub</string>
     <string name="update_source_oci">OCI</string>
-    <string name="update_github_proxy">GitHub proxy</string>
+    <string name="update_github_proxy">GitHub proxy (update and subscription)</string>
     <string name="update_github_proxy_value">GitHub proxy · %1$s</string>
     <string name="update_oci_mirror">OCI Registry mirror</string>
     <string name="update_oci_mirror_value">OCI mirror · %1$s</string>

@@ -114,6 +114,23 @@ public class BackupPreferenceFilterTest {
     }
 
     @Test
+    public void subscriptionListFollowsAppSettingsSync() {
+        SyncOptions settings = new SyncOptions().config(false).spider(false).settings(true);
+        SyncOptions configOnly = new SyncOptions().config(true).spider(false).settings(false);
+
+        assertTrue(Backup.include("subscription", settings));
+        assertFalse(Backup.include("subscription", configOnly));
+    }
+
+    @Test
+    public void subscriptionGateStaysDeviceLocal() {
+        SyncOptions everything = new SyncOptions().config(true).spider(true).webHome(true).settings(true);
+
+        assertFalse(Backup.include("subscription_gate", everything));
+        assertFalse(Backup.include("subscription_active_0", everything));
+    }
+
+    @Test
     public void updateDownloadSettingsFollowAppSettingsSync() {
         SyncOptions settings = new SyncOptions().config(false).spider(false).settings(true);
 

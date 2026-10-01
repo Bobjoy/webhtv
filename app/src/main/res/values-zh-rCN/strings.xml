@@ -1203,7 +1203,7 @@
     <string name="update_settings_source">更新方式</string>
     <string name="update_source_github">GitHub</string>
     <string name="update_source_oci">OCI</string>
-    <string name="update_github_proxy">GitHub 代理</string>
+    <string name="update_github_proxy">GitHub 代理（更新与订阅）</string>
     <string name="update_github_proxy_value">GitHub 代理 · %1$s</string>
     <string name="update_oci_mirror">OCI 镜像代理</string>
     <string name="update_oci_mirror_value">OCI 镜像 · %1$s</string>

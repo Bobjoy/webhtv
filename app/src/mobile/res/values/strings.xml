@@ -97,6 +97,30 @@
     <string name="live_program_current">Live</string>
     <string name="dialog_clear">Clear</string>
 
+    <!-- Subscription -->
+    <string name="setting_subscription">Subscription</string>
+    <string name="subscription_add">Add</string>
+    <string name="subscription_empty">No subscription yet</string>
+    <string name="subscription_name">Subscription name, optional</string>
+    <string name="subscription_url">Subscription URL</string>
+    <string name="subscription_url_required">Enter subscription URL</string>
+    <string name="subscription_duplicated">This subscription URL already exists</string>
+    <string name="subscription_pull">Pull</string>
+    <string name="subscription_load_failed">Failed to pull subscription</string>
+    <string name="subscription_edit_locked">Built-in subscription cannot be edited</string>
+    <string name="subscription_update">Update subscriptions</string>
+    <string name="subscription_updating">Updating subscriptions…</string>
+    <string name="subscription_update_done">Updated %1$d of %2$d subscriptions</string>
+    <string name="subscription_gate_title">Enable subscriptions</string>
+    <string name="subscription_gate_message">Subscription is hidden by default. Enter the 4-digit passcode to enable it; a restart takes effect.</string>
+    <string name="subscription_gate_code">Passcode</string>
+    <string name="subscription_gate_enable">Enable</string>
+    <string name="subscription_gate_code_required">Enter the 4-digit passcode</string>
+    <string name="subscription_gate_wrong_code">Wrong passcode</string>
+    <string name="subscription_gate_unreachable">Cannot reach the verification service. Check the network or the GitHub proxy setting.</string>
+    <string name="subscription_gate_unlocked">Enabled, restarting…</string>
+    <string name="subscription_in_use">In use</string>
+
     <!-- Dialog -->
     <string name="dialog_delete_record">Delete all records?</string>
     <string name="dialog_delete_keep">All keep records will be removed.</string>
