@@ -1520,4 +1520,34 @@
 
     <string name="player_audio_badge_queue">佇列</string>
     <string name="player_audio_repeat">循環</string>
+    <!-- Subscription -->
+    <string name="setting_subscription">訂閱</string>
+    <string name="subscription_add">新增</string>
+    <string name="subscription_empty">暫無訂閱</string>
+    <string name="subscription_name">訂閱名稱（選填）</string>
+    <string name="subscription_url">訂閱網址</string>
+    <string name="subscription_url_required">請輸入訂閱網址</string>
+    <string name="subscription_duplicated">該訂閱網址已存在</string>
+    <string name="subscription_pull">拉取</string>
+    <string name="subscription_load_failed">訂閱拉取失敗</string>
+    <string name="subscription_edit_locked">內建訂閱不可編輯</string>
+    <string name="subscription_update">更新訂閱</string>
+    <string name="subscription_updating">正在更新訂閱…</string>
+    <string name="subscription_update_done">訂閱更新完成：成功 %1$d / 共 %2$d</string>
+    <string name="subscription_gate_title">開啟訂閱功能</string>
+    <string name="subscription_gate_message">訂閱功能預設隱藏。輸入 4 位授權碼開啟，開啟後重啟生效。</string>
+    <string name="subscription_gate_code">授權碼</string>
+    <string name="subscription_gate_enable">開啟</string>
+    <string name="subscription_gate_code_required">請輸入 4 位授權碼</string>
+    <string name="subscription_gate_wrong_code">授權碼錯誤</string>
+    <string name="subscription_gate_unreachable">無法連線驗證服務，請檢查網路或 GitHub 加速設定</string>
+    <string name="subscription_gate_unlocked">已開啟，重啟生效</string>
+    <string name="subscription_in_use">使用中</string>
+
+    <!-- GitHub 加速 -->
+    <string name="setting_github_proxy">GitHub 加速</string>
+    <string name="github_proxy_url">加速網址（需含 https://）</string>
+    <string name="github_proxy_saved">加速設定已儲存</string>
+
+
 </resources>

@@ -30,11 +30,13 @@ import com.fongmi.android.tv.ui.base.BaseActivity;
 import com.fongmi.android.tv.ui.dialog.AboutDialog;
 import com.fongmi.android.tv.ui.dialog.ConfigDialog;
 import com.fongmi.android.tv.ui.dialog.DohDialog;
+import com.fongmi.android.tv.ui.dialog.GithubProxyDialog;
 import com.fongmi.android.tv.ui.dialog.HistoryDialog;
 import com.fongmi.android.tv.ui.dialog.LiveDialog;
 import com.fongmi.android.tv.ui.dialog.RestoreDialog;
 import com.fongmi.android.tv.ui.dialog.BackupProgressDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
+import com.fongmi.android.tv.ui.dialog.SubscriptionGateDialog;
 import com.fongmi.android.tv.utils.AppVersion;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.fongmi.android.tv.utils.Notify;
@@ -83,6 +85,7 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         mBinding.vod.requestFocus();
         mBinding.vodUrl.setText(VodConfig.getDesc());
         mBinding.liveUrl.setText(LiveConfig.getDesc());
+        mBinding.subscription.setVisibility(Setting.isSubscriptionUnlocked() ? View.VISIBLE : View.GONE);
         setWallText();
         mBinding.versionText.setText(AppVersion.fullName());
         setCacheText();
@@ -120,6 +123,9 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         mBinding.danmaku.setOnClickListener(this::onDanmaku);
         mBinding.restore.setOnClickListener(this::onRestore);
         mBinding.version.setOnClickListener(this::onVersion);
+        mBinding.version.setOnLongClickListener(this::onGateTap);
+        mBinding.subscription.setOnClickListener(this::onSubscription);
+        mBinding.githubProxy.setOnClickListener(this::onGithubProxy);
         mBinding.vod.setOnLongClickListener(this::onVodEdit);
         mBinding.vodHome.setOnClickListener(this::onVodHome);
         mBinding.live.setOnLongClickListener(this::onLiveEdit);
@@ -247,6 +253,20 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
 
     private void onVersion(View view) {
         AboutDialog.show(this, () -> Updater.create().force().start(this));
+    }
+
+    private boolean onGateTap(View view) {
+        if (Setting.isSubscriptionUnlocked()) return false;
+        SubscriptionGateDialog.create().show(this);
+        return true;
+    }
+
+    private void onSubscription(View view) {
+        SubscriptionActivity.start(this);
+    }
+
+    private void onGithubProxy(View view) {
+        GithubProxyDialog.create().show(this);
     }
 
     private void setWallDefault(View view) {
