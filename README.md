@@ -325,7 +325,7 @@ adb install -r app/build/outputs/apk/mobileArm64_v8a/debug/app-mobile-arm64_v8a-
 
 ### Actions 产物下载
 
-`.github/workflows/apk-build.yml`（工作流名 `APK Build`）在 push 到 `feat-subscription` 时自动触发，也可以在 Actions 页面手动 `Run workflow`。它构建 4 个 release APK 并以 **workflow artifact** 形式上传，不创建 Release：
+`.github/workflows/apk-build.yml`（工作流名 `APK Build`）在 push 到 `feat-subscription` 时自动触发，`README.md`、`docs/`、`.scratch/` 的纯文档改动不会触发；也可以在 Actions 页面手动 `Run workflow`。它构建 4 个 release APK 并以 **workflow artifact** 形式上传，不创建 Release：
 
 ```text
 https://github.com/Bobjoy/webhtv/actions/runs/36870739296

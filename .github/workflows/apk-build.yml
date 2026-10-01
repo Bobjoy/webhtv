@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - feat-subscription
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.scratch/**'
   workflow_dispatch:
 
 permissions:
