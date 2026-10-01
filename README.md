@@ -323,6 +323,18 @@ adb devices
 adb install -r app/build/outputs/apk/mobileArm64_v8a/debug/app-mobile-arm64_v8a-debug.apk
 ```
 
+### Actions 产物下载
+
+`.github/workflows/apk-build.yml`（工作流名 `APK Build`）在 push 到 `feat-subscription` 时自动触发，也可以在 Actions 页面手动 `Run workflow`。它构建 4 个 release APK 并以 **workflow artifact** 形式上传，不创建 Release：
+
+```text
+https://github.com/Bobjoy/webhtv/actions/runs/36870739296
+```
+
+打开上面的运行页面，在底部 `Artifacts` 区域下载 `release-apk-feat-subscription-<运行号>`（解压后为 `mobile-arm64_v8a.apk`、`mobile-armeabi_v7a.apk`、`leanback-arm64_v8a.apk`、`leanback-armeabi_v7a.apk`）。
+
+注意：artifact **需要登录 GitHub 才能下载，且保留 14 天后过期**，不是公开直链；查看最新一次构建请到 [APK Build 工作流页面](https://github.com/Bobjoy/webhtv/actions/workflows/apk-build.yml)。需要长期公开直链时走下一节的 Release 流程。
+
 ### GitHub 手动发布
 
 仓库内置 `.github/workflows/android-release.yml`,只支持在 GitHub Actions 页面手动触发,不会在每次 push 代码时自动打包。默认 tag 会从 `app/build.gradle` 读取当前 `versionName`:稳定版生成 `v<versionName>-yyyyMMddHHmm`;在 `fongmi-sync` 分支选择 `auto` 通道时生成测试版 `v<versionName>-beta-yyyyMMddHHmm`,APK/JSON 文件名同步追加 `-beta`。
