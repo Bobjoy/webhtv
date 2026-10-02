@@ -3,11 +3,8 @@ package com.fongmi.android.tv.ui.activity;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -40,7 +37,6 @@ final class WebHomeChromeController {
     private final HomeActivity activity;
     private final ActivityHomeBinding binding;
     private final Host host;
-    private final int navigationBaseHeight;
     private WindowInsetsCompat insets;
     private WebHomeChromeOptions options;
     private WebHomeViewport viewport;
@@ -52,7 +48,6 @@ final class WebHomeChromeController {
         this.activity = activity;
         this.binding = binding;
         this.host = host;
-        this.navigationBaseHeight = binding.navigation.getLayoutParams().height;
         if (!Setting.isWebHomeFullscreen()) {
             this.mode = WebHomeChrome.NORMAL;
             this.previousMode = WebHomeChrome.NORMAL;
@@ -177,22 +172,8 @@ final class WebHomeChromeController {
     private void applyLayout() {
         boolean active = isActive();
         boolean normal = !active || WebHomeChrome.NORMAL.equals(mode);
-        binding.navigation.setVisibility(normal ? View.VISIBLE : View.GONE);
         WebHomeViewport current = buildViewport();
-        int top = normal ? current.getSafeTop() : 0;
-        int bottom = normal ? current.getSafeBottom() : 0;
-        binding.container.setPadding(0, top, 0, 0);
-        binding.navigation.setPadding(0, 0, 0, bottom);
-        ViewGroup.LayoutParams params = binding.navigation.getLayoutParams();
-        int height = navigationBaseHeight + bottom;
-        if (params.height != height) {
-            params.height = height;
-            binding.navigation.setLayoutParams(params);
-        }
-        RelativeLayout.LayoutParams container = (RelativeLayout.LayoutParams) binding.container.getLayoutParams();
-        if (binding.navigation.getVisibility() == View.VISIBLE) container.addRule(RelativeLayout.ABOVE, binding.navigation.getId());
-        else container.removeRule(RelativeLayout.ABOVE);
-        binding.container.setLayoutParams(container);
+        binding.container.setPadding(0, normal ? current.getSafeTop() : 0, 0, normal ? current.getSafeBottom() : 0);
     }
 
     private void dispatchViewport() {

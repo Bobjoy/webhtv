@@ -353,15 +353,6 @@ public class Setting {
         Prefers.put("incognito", incognito);
     }
 
-    /** 订阅门禁标记；写入必须同步 commit，因为解锁成功后紧接着走 killProcess 重启（ADR-0007）。 */
-    public static boolean isSubscriptionUnlocked() {
-        return !Prefers.getString("subscription_gate").isEmpty();
-    }
-
-    public static void putSubscriptionUnlocked() {
-        Prefers.getPrefers().edit().putString("subscription_gate", "1").commit();
-    }
-
     public static int getLanguage() {
         int language = Prefers.getInt("language", LANGUAGE_FOLLOW_SYSTEM);
         return isLanguage(language) ? language : LANGUAGE_FOLLOW_SYSTEM;

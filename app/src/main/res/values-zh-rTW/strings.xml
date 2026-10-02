@@ -1,11 +1,11 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
     <!-- App -->
-    <string name="app_name">影視</string>
+    <string name="app_name">今日影視</string>
 
     <!-- Live -->
     <string name="live_pass">密碼</string>
-    <string name="live_refresh">刷新</string>
+    <string name="vod_refresh">刷新</string>
     <string name="live_line">來源 <xliff:g name="name">%s</xliff:g></string>
     <string name="live_control_source">直播源</string>
 
@@ -660,6 +660,20 @@
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
     <string name="setting_cache">暫存</string>
+    <string name="menu_clear_cache">清除快取</string>
+    <string name="cache_cleared">快取已清除</string>
+    <string name="source_fetching">正在取得點播源…</string>
+    <string name="menu_update_source">更新資源</string>
+    <string name="source_updating">正在更新資源…</string>
+    <string name="source_updated">資源已更新</string>
+    <string name="source_update_failed">資源更新失敗</string>
+    <string name="gate_title">啟動口令</string>
+    <string name="gate_message">請輸入 4 位啟動口令後使用</string>
+    <string name="gate_code">口令</string>
+    <string name="gate_enter">進入</string>
+    <string name="gate_code_required">請輸入 4 位口令</string>
+    <string name="gate_wrong_code">口令錯誤，請重新輸入</string>
+    <string name="gate_unreachable">網路不可用，請稍後重試</string>
     <string name="setting_backup">備份</string>
     <string name="setting_restore">還原</string>
     <string name="setting_about">關於</string>
@@ -1187,7 +1201,7 @@
     <string name="update_settings_source">更新方式</string>
     <string name="update_source_github">GitHub</string>
     <string name="update_source_oci">OCI</string>
-    <string name="update_github_proxy">GitHub 代理（更新與訂閱）</string>
+    <string name="update_github_proxy">GitHub 加速</string>
     <string name="update_github_proxy_value">GitHub 代理 · %1$s</string>
     <string name="update_oci_mirror">OCI 映像代理</string>
     <string name="update_oci_mirror_value">OCI 映像 · %1$s</string>
@@ -1520,29 +1534,6 @@
 
     <string name="player_audio_badge_queue">佇列</string>
     <string name="player_audio_repeat">循環</string>
-    <!-- Subscription -->
-    <string name="setting_subscription">訂閱</string>
-    <string name="subscription_add">新增</string>
-    <string name="subscription_empty">暫無訂閱</string>
-    <string name="subscription_name">訂閱名稱（選填）</string>
-    <string name="subscription_url">訂閱網址</string>
-    <string name="subscription_url_required">請輸入訂閱網址</string>
-    <string name="subscription_duplicated">該訂閱網址已存在</string>
-    <string name="subscription_pull">拉取</string>
-    <string name="subscription_load_failed">訂閱拉取失敗</string>
-    <string name="subscription_edit_locked">內建訂閱不可編輯</string>
-    <string name="subscription_update">更新訂閱</string>
-    <string name="subscription_updating">正在更新訂閱…</string>
-    <string name="subscription_update_done">訂閱更新完成：成功 %1$d / 共 %2$d</string>
-    <string name="subscription_gate_title">開啟訂閱功能</string>
-    <string name="subscription_gate_message">訂閱功能預設隱藏。輸入 4 位授權碼開啟，開啟後重啟生效。</string>
-    <string name="subscription_gate_code">授權碼</string>
-    <string name="subscription_gate_enable">開啟</string>
-    <string name="subscription_gate_code_required">請輸入 4 位授權碼</string>
-    <string name="subscription_gate_wrong_code">授權碼錯誤</string>
-    <string name="subscription_gate_unreachable">無法連線驗證服務，請檢查網路或 GitHub 加速設定</string>
-    <string name="subscription_gate_unlocked">已開啟，重啟生效</string>
-    <string name="subscription_in_use">使用中</string>
 
     <!-- GitHub 加速 -->
     <string name="setting_github_proxy">GitHub 加速</string>

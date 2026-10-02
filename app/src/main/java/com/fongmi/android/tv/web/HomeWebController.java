@@ -831,7 +831,6 @@ public class HomeWebController {
                     app:{
                       search:(keyword,options)=>invoke('app.search',Object.assign({},options||{},{keyword})),
                       openVod:()=>invoke('app.openVod',{}),
-                      openLive:()=>invoke('app.openLive',{}),
                       openKeep:()=>invoke('app.openKeep',{}),
                       openSetting:()=>invoke('app.openSetting',{}),
                       history:()=>invoke('app.history',{})
@@ -858,7 +857,6 @@ public class HomeWebController {
                     stat:player.status,
                     search:window.fongmi.app.search,
                     openVod:window.fongmi.app.openVod,
-                    openLive:window.fongmi.app.openLive,
                     openKeep:window.fongmi.app.openKeep,
                     openSetting:window.fongmi.app.openSetting,
                     history:window.fongmi.app.history,

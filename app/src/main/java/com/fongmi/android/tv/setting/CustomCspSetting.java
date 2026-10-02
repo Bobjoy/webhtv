@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.R;
-import com.fongmi.android.tv.bean.Live;
 import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.bean.Style;
 import com.fongmi.android.tv.gson.ExtAdapter;
@@ -391,16 +390,6 @@ public class CustomCspSetting {
         return new Result(home);
     }
 
-    public static void inject(List<Live> lives, String spider) {
-        Registry registry = load();
-        if (!registry.isEnabled()) return;
-        List<Live> items = registry.lives(spider);
-        if (items.isEmpty()) return;
-        for (Live live : items) lives.remove(live);
-        int index = Math.max(0, Math.min(registry.getInsertIndex(), lives.size()));
-        lives.addAll(index, items);
-    }
-
     public static void inject(JsonObject object) {
         Registry registry = load();
         if (!registry.isEnabled() || object == null) return;
@@ -448,11 +437,6 @@ public class CustomCspSetting {
 
     private static boolean isEmptyPrimitive(JsonElement element) {
         return element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString() && TextUtils.isEmpty(element.getAsString());
-    }
-
-    public static boolean hasLives() {
-        Registry registry = load();
-        return registry.isEnabled() && registry.getItems().stream().anyMatch(item -> item.isEnabled() && item.isLive() && item.isValid());
     }
 
     public static int countEnabled() {
@@ -633,10 +617,6 @@ public class CustomCspSetting {
 
         public List<Site> sites() {
             return getItems().stream().filter(Item::isEnabled).filter(item -> !item.isLive() && !item.isOther()).filter(Item::isValid).map(Item::site).filter(site -> !site.isEmpty()).toList();
-        }
-
-        public List<Live> lives(String spider) {
-            return getItems().stream().filter(Item::isEnabled).filter(Item::isLive).filter(Item::isValid).map(item -> item.live(spider)).filter(live -> !live.isEmpty()).toList();
         }
     }
 
@@ -1169,32 +1149,6 @@ public class CustomCspSetting {
             if (webHomeOnly && getExtensions() != null) site.setExtensions(getExtensions().deepCopy());
             site.setStyle(Style.rect());
             return site;
-        }
-
-        public Live live(String spider) {
-            normalize();
-            return Live.objectFrom(liveObject(), spider);
-        }
-
-        private JsonObject liveObject() {
-            JsonObject object = live == null ? new JsonObject() : live.deepCopy();
-            if (!TextUtils.isEmpty(name)) object.addProperty("name", name.trim());
-            else if (!object.has("name")) object.addProperty("name", getName());
-            if (type != null) object.addProperty("type", type);
-            if (playerType != null) object.addProperty("playerType", playerType);
-            if (!TextUtils.isEmpty(url)) object.addProperty("url", url.trim());
-            if (!TextUtils.isEmpty(api)) object.addProperty("api", api.trim());
-            if (!TextUtils.isEmpty(ext)) object.addProperty("ext", ext.trim());
-            if (!TextUtils.isEmpty(jar)) object.addProperty("jar", jar.trim());
-            if (!TextUtils.isEmpty(click)) object.addProperty("click", click.trim());
-            if (!TextUtils.isEmpty(logo)) object.addProperty("logo", logo.trim());
-            if (!TextUtils.isEmpty(epg)) object.addProperty("epg", epg.trim());
-            if (!TextUtils.isEmpty(ua)) object.addProperty("ua", ua.trim());
-            if (!TextUtils.isEmpty(origin)) object.addProperty("origin", origin.trim());
-            if (!TextUtils.isEmpty(referer)) object.addProperty("referer", referer.trim());
-            if (!TextUtils.isEmpty(timeZone)) object.addProperty("timeZone", timeZone.trim());
-            if (timeout != null) object.addProperty("timeout", timeout);
-            return object;
         }
 
         private Site siteFromJson() {

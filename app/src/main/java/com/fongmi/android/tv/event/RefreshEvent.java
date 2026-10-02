@@ -38,10 +38,6 @@ public class RefreshEvent {
         EventBus.getDefault().post(new RefreshEvent(Type.LANGUAGE));
     }
 
-    public static void live() {
-        EventBus.getDefault().post(new RefreshEvent(Type.LIVE));
-    }
-
     public static void detail() {
         EventBus.getDefault().post(new RefreshEvent(Type.DETAIL));
     }
@@ -89,6 +85,6 @@ public class RefreshEvent {
     }
 
     public enum Type {
-        HOME, CATEGORY, HISTORY, KEEP, SIZE, THEME, LANGUAGE, LIVE, DETAIL, PLAYER, SUBTITLE, DANMAKU, VOD
+        HOME, CATEGORY, HISTORY, KEEP, SIZE, THEME, LANGUAGE, DETAIL, PLAYER, SUBTITLE, DANMAKU, VOD
     }
 }

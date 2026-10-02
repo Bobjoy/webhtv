@@ -24,4 +24,16 @@
         tools:text="120 KB/s"
         tools:visibility="visible" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="72dp"
+        android:text="@string/source_fetching"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </FrameLayout>

@@ -143,7 +143,6 @@ public class Action implements Process {
         if (TextUtils.isEmpty(type)) return;
         switch (type) {
             case "home" -> RefreshEvent.home();
-            case "live" -> RefreshEvent.live();
             case "detail" -> RefreshEvent.detail();
             case "player" -> RefreshEvent.player();
             case "category" -> RefreshEvent.category();

@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 
 import com.fongmi.android.tv.App;
-import com.fongmi.android.tv.api.config.LiveConfig;
 import com.fongmi.android.tv.api.config.VodConfig;
-import com.fongmi.android.tv.api.config.WallConfig;
 import com.fongmi.android.tv.api.loader.BaseLoader;
 import com.fongmi.android.tv.db.AppDatabase;
 import com.fongmi.android.tv.event.ConfigEvent;
@@ -33,12 +31,10 @@ public class Backup {
     public static final String PREF_WEB_HOME_EXTENSION = "web_home_extension";
     public static final String PREF_WEB_HOME_EXTENSION_SOURCES = "web_home_extension_user_sources";
 
-    private static final Set<String> APP_PREFS = Set.of("doh", "ua", "wall", "wall_type", "reset", "site_mode", "site_block_keys", "search_column", "sync_mode", "sync_paths", "incognito", "drive_check", "drive_check_cache", "compact_episode_title", "web_home_fullscreen", "viewing_record_sync_enabled", "viewing_record_sync_local_write", "playback_remote_sync_config", "playback_webhook_config", "playback_webhook_privacy_accepted", "shell_proxy", "shell_proxy_rules", "shell_proxy_url", "shell_proxy_hosts", "update", "update_source", "update_github_proxy", "update_github_proxy_url", "update_github_proxy_mode", "update_oci_mirror", "update_oci_mirror_url", "adblock", "zhuyin", "theme_color", "wall_color", "crash", "render", "pad_live_mode", "size", "scale", "buffer", "buffer_bytes", "back_buffer", "play_cache", "preload", "preload_threads", "preload_size", "preload_time", "player_auto_change", "background", "speed", "play_speed", "caption", "tunnel", "exo_4k_compat", "playback_bluray_menu", "playback_performance_profile", "playback_performance_initialized", "perf_codec_async_queueing", "perf_dynamic_scheduling", "perf_video_duration_progress", "perf_late_drop_input", "perf_track_limit", "perf_adaptive_downgrade", "perf_load_only_selected_tracks", "perf_surface_fixed_size", "perf_decoder_fallback", "perf_soft_video_tune", "perf_high_buffer", "perf_bandwidth_meter", "perf_exo_network_protection_mode", "player_button_order", "player_button_hidden", "audio_prefer", "video_prefer", "prefer_aac", "subtitle_text_size", "subtitle_position", "player_osd_title", "player_osd_resolution", "player_osd_time", "player_osd_progress", "player_osd_traffic", "player_osd_mini", "player_osd_diagnostics", "boot_live", "across", "change", "invert", "scale_live", "live_epg_url", "live_epg_history", "subscription");
+    private static final Set<String> APP_PREFS = Set.of("doh", "ua", "wall", "wall_type", "reset", "site_mode", "site_block_keys", "search_column", "sync_mode", "sync_paths", "incognito", "drive_check", "drive_check_cache", "compact_episode_title", "web_home_fullscreen", "viewing_record_sync_enabled", "viewing_record_sync_local_write", "playback_remote_sync_config", "playback_webhook_config", "playback_webhook_privacy_accepted", "shell_proxy", "shell_proxy_rules", "shell_proxy_url", "shell_proxy_hosts", "update", "update_source", "update_github_proxy", "update_github_proxy_url", "update_github_proxy_mode", "update_oci_mirror", "update_oci_mirror_url", "adblock", "zhuyin", "theme_color", "wall_color", "crash", "render", "pad_live_mode", "size", "scale", "buffer", "buffer_bytes", "back_buffer", "play_cache", "preload", "preload_threads", "preload_size", "preload_time", "player_auto_change", "background", "speed", "play_speed", "caption", "tunnel", "exo_4k_compat", "playback_bluray_menu", "playback_performance_profile", "playback_performance_initialized", "perf_codec_async_queueing", "perf_dynamic_scheduling", "perf_video_duration_progress", "perf_late_drop_input", "perf_track_limit", "perf_adaptive_downgrade", "perf_load_only_selected_tracks", "perf_surface_fixed_size", "perf_decoder_fallback", "perf_soft_video_tune", "perf_high_buffer", "perf_bandwidth_meter", "perf_exo_network_protection_mode", "player_button_order", "player_button_hidden", "audio_prefer", "video_prefer", "prefer_aac", "subtitle_text_size", "subtitle_position", "player_osd_title", "player_osd_resolution", "player_osd_time", "player_osd_progress", "player_osd_traffic", "player_osd_mini", "player_osd_diagnostics", "boot_live", "across", "change", "invert", "scale_live", "live_epg_url", "live_epg_history");
 
     @SerializedName("site")
     private List<Site> site;
-    @SerializedName("live")
-    private List<Live> live;
     @SerializedName("keep")
     private List<Keep> keep;
     @SerializedName("config")
@@ -56,7 +52,6 @@ public class Backup {
         Backup backup = new Backup();
         backup.setPrefers(Prefers.getPrefers().getAll());
         backup.setSite(AppDatabase.get().getSiteDao().findAll());
-        backup.setLive(AppDatabase.get().getLiveDao().findAll());
         backup.setKeep(AppDatabase.get().getKeepDao().findAll());
         backup.setConfig(AppDatabase.get().getConfigDao().findAll());
         backup.setHistory(AppDatabase.get().getHistoryDao().findAll());
@@ -69,7 +64,6 @@ public class Backup {
         Backup backup = new Backup();
         if (options.isConfig()) {
             backup.setSite(AppDatabase.get().getSiteDao().findAll());
-            backup.setLive(AppDatabase.get().getLiveDao().findAll());
             backup.setConfig(AppDatabase.get().getConfigDao().findAll());
         }
         if (options.isKeep()) backup.setKeep(AppDatabase.get().getKeepDao().findAll());
@@ -95,7 +89,6 @@ public class Backup {
     public void restore(boolean preserveMissingWebHomePrefs) {
         AppDatabase.get().clearAllTables();
         AppDatabase.get().getSiteDao().insertOrUpdate(getSite());
-        AppDatabase.get().getLiveDao().insertOrUpdate(getLive());
         AppDatabase.get().getKeepDao().insertOrUpdate(getKeep());
         AppDatabase.get().getConfigDao().insertOrUpdate(getConfig());
         AppDatabase.get().getHistoryDao().insertOrUpdate(getHistory());
@@ -109,11 +102,9 @@ public class Backup {
         if (options.isConfig()) {
             if (force) {
                 AppDatabase.get().getSiteDao().delete();
-                AppDatabase.get().getLiveDao().delete();
                 AppDatabase.get().getConfigDao().delete();
             }
             AppDatabase.get().getSiteDao().insertOrUpdate(getSite());
-            AppDatabase.get().getLiveDao().insertOrUpdate(getLive());
             cids.putAll(restoreConfig());
         }
         if (options.isKeep()) {
@@ -139,8 +130,6 @@ public class Backup {
 
     private void reloadConfig() {
         VodConfig.get().clear().init().load(new Callback());
-        LiveConfig.get().clear().init().load();
-        WallConfig.get().init().load();
         ConfigEvent.common();
     }
 
@@ -178,8 +167,6 @@ public class Backup {
             return false;
         }
         if (key.startsWith("remote_trust_")) return false;
-        if ("subscription_gate".equals(key)) return false;
-        if (key.startsWith("subscription_active_")) return false;
         if ("update_github_proxy_good".equals(key)) return false;
         if (isWebHomeExtensionPref(key)) return options.isWebHome();
         if (key.startsWith("cache_")) return options.isWebHome() || options.isSpider();
@@ -282,14 +269,6 @@ public class Backup {
 
     public void setSite(List<Site> site) {
         this.site = site;
-    }
-
-    public List<Live> getLive() {
-        return live == null ? Collections.emptyList() : live;
-    }
-
-    public void setLive(List<Live> live) {
-        this.live = live;
     }
 
     public List<Keep> getKeep() {

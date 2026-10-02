@@ -303,8 +303,8 @@ debug 原始输出：
 ```text
 app/build/outputs/apk/mobileArm64_v8a/debug/app-mobile-arm64_v8a-debug.apk
 app/build/outputs/apk/mobileArmeabi_v7a/debug/app-mobile-armeabi_v7a-debug.apk
-app/build/outputs/apk/leanbackArm64_v8a/debug/app-leanback-arm64_v8a-debug.apk
-app/build/outputs/apk/leanbackArmeabi_v7a/debug/app-leanback-armeabi_v7a-debug.apk
+app/build/outputs/apk/leanbackArm64_v8a/debug/app-leanback-arm64_v8a-debug.apk   # 完整版分支
+app/build/outputs/apk/leanbackArmeabi_v7a/debug/app-leanback-armeabi_v7a-debug.apk  # 完整版分支
 ```
 
 release 构建完成后会自动复制到 `Release/apk/`，Gradle 原始输出仍在 `app/build/outputs/apk/<flavor>/release/`：
@@ -312,8 +312,8 @@ release 构建完成后会自动复制到 `Release/apk/`，Gradle 原始输出�
 ```text
 Release/apk/mobile-arm64_v8a.apk
 Release/apk/mobile-armeabi_v7a.apk
-Release/apk/leanback-arm64_v8a.apk
-Release/apk/leanback-armeabi_v7a.apk
+Release/apk/leanback-arm64_v8a.apk       # 完整版分支
+Release/apk/leanback-armeabi_v7a.apk     # 完整版分支
 ```
 
 安装到已连接设备：
@@ -325,7 +325,7 @@ adb install -r app/build/outputs/apk/mobileArm64_v8a/debug/app-mobile-arm64_v8a-
 
 ### Actions 产物下载
 
-`.github/workflows/apk-build.yml`（工作流名 `APK Build`）在 push 到 `feat-subscription` 时自动触发，`README.md`、`docs/`、`.scratch/` 的纯文档改动不会触发；也可以在 Actions 页面手动 `Run workflow`。它构建 4 个 release APK 并以 **workflow artifact** 形式上传，不创建 Release：
+`.github/workflows/apk-build.yml`（工作流名 `APK Build`）在 push 到 `feat-subscription` 时自动触发，`README.md`、`docs/`、`.scratch/` 的纯文档改动不会触发；也可以在 Actions 页面手动 `Run workflow`。它构建 4 个 release APK 并以 **workflow artifact** 形式上传，不创建 Release（`feat-mobile-simple` 分支上的这份文件只构建 mobile 两个 ABI，该分支的 `leanback` 源集已删）：
 
 ```text
 https://github.com/Bobjoy/webhtv/actions/runs/36870739296
@@ -415,10 +415,47 @@ scripts/build_media_deps.sh --nextlib-only
 - `Could not resolve ...`：依赖下载失败，检查网络或设置代理后重新执行 Gradle。
 - `Permission denied: ./gradlew`：本仓库文档统一使用 `bash gradlew`，不依赖可执行位。
 
+## 简易版（`feat-mobile-simple` 分支）
+
+面向不懂技术的普通用户的一版：**装上就能看**，装机配置一律走默认值且不存在修改入口（唯一例外是播放页的「播放设置」，见下）。
+
+- 分支 `feat-mobile-simple`，从 `feat-subscription` 切出，基线 HEAD `290f4f9`。
+- **真删代码而不是隐藏**：直播、壁纸、`leanback`(TV) 整个 flavor、订阅链路与旧「连击解锁」门禁、底部导航栏与设置页全部从源码删除。`mode` 维度只剩 `mobile`（`app/src/leanback` 源集已删），`abi` 维度仍是 `arm64_v8a` / `armeabi_v7a`。
+- **启动口令门禁**：冷启动先落在全屏口令页（launcher 是 `GateActivity`，不是首页），输入 `codes.txt` 里的 4 位口令才进首页，未通过前不拉 `sub.txt`、看不到任何内容。通过后口令与码表都落盘（`gate_code` / `gate_codes`，不进备份白名单），之后每次冷启动离线比对直接进首页；口令错误提示「口令错误，请重新输入」，码表拉不到提示「网络不可用，请稍后重试」。`ACTION_SEND`/`VIEW` 深链直指 `HomeActivity` 也会被弹回口令页。码表明文公开，作用是防误入而不是访问控制；不内置码表、不做服务端校验。
+- **播放设置保留**：播放页的「设置」（解码方式、画面比例、弹幕等）不删。简易版删的是装机配置，播放设置是看片时的应急手段——硬解放不出来要能切软解。
+- 内置点播源：冷启动后台拉一次
+  `https://raw.githubusercontent.com/Bobjoy/webhtv-sub/main/sub.txt`，
+  一行一条点播配置地址，按行序取第一条能加载成功的生效；拉不到就沿用旧源、不弹窗、不内置兜底。
+  `sub.txt` 由 `webhtv-sub` 的日巡检脚本自动生成，人工只维护 `vod.json`。
+- 首页右上角溢出下拉恰好五项：**刷新 / 更新资源 / 清除缓存 / GitHub 加速 / 检查更新**。
+  「更新资源」= 手动重拉 `sub.txt` 并自动配置生效。左上角图标是纯装饰，不暴露源地址。
+- 包身份：`applicationId com.fongmi.android.tv.simple`，可与完整版共存安装；
+  `versionName` 为 `主版本号.序号`（`5.6.0` → `5.6.0.1`），
+  `versionCode = 主 versionCode × 10 + 序号`（`560` → `5601`），上游主版本号递增时按同一公式重算。
+- 本地打包（只出 mobile 两个 ABI）：
+
+  ```bash
+  bash ./gradlew --offline :app:assembleMobileArm64_v8aRelease :app:assembleMobileArmeabi_v7aRelease
+  ```
+
+  产物在 `app/build/outputs/apk/mobileArm64_v8a/release/` 与
+  `app/build/outputs/apk/mobileArmeabi_v7a/release/`，release 构建后同时复制到 `Release/apk/`。
+- **分发口径：手动编译、手动分发。** 不给 `apk-build.yml` 加简易版任务；
+  简易版不发 GitHub Release、没有自动更新通道。本分支只把两个 workflow 里已不存在的
+  `assembleLeanbackArm64_v8aRelease` / `assembleLeanbackArmeabi_v7aRelease` 删掉
+  （`android-release.yml` 是手动触发，留着这两行在本分支必然构建失败）。
+  因此「检查更新」目前仍按 `mobile-<abi>.json` 去查完整版仓库的 Release，
+  而 `hasUpdate()` 是"版本号不相等"判断，简易版的 `5.6.0.1` 会匹配到完整版的 `5.6.0` 产物，
+  提示"有更新"后下载，再被 `Updater` 的 `APPLICATION_ID` 校验拦下并报「应用身份或签名不一致」——
+  即"永远装不上"。给普通用户分发前要么删掉这一项，要么给它单独的清单来源。
+- 已知遗留（不影响运行）：`app/libs/tvbus-release.aar` 与 `proguard-rules.pro` 里对应的 keep 规则已成死重，
+  `db/Migrations` 的 30→37 迁移链仍引用旧直播表 SQL（`VERSION = 1` 走不到，且已开
+  `fallbackToDestructiveMigration(true)`），`assets/` 与部分字符串里还有无人引用的直播/壁纸文案。
+
 ## 目录结构
 
 ```text
-app/          Android 主应用(mobile/leanback 双 flavor)
+app/          Android 主应用；完整版是 mobile/leanback 双 flavor，简易版分支只剩 mobile
 catvod/       CatVod 抽象层、Spider 接口、网络和代理工具
 quickjs/      JavaScript Spider 运行时
 chaquo/       Python Spider 运行时

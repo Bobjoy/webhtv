@@ -1,6 +1,5 @@
 package com.fongmi.android.tv.server;
 
-import com.fongmi.android.tv.api.config.LiveConfig;
 import com.fongmi.android.tv.bean.Device;
 import com.fongmi.android.tv.server.impl.Process;
 import com.fongmi.android.tv.server.process.Action;
@@ -79,7 +78,6 @@ public class Nano extends NanoHTTPD {
         Map<String, String> files = new HashMap<>();
         if (session.getMethod() == Method.POST && shouldParseBody(url)) parse(session, files);
         if (shouldLogRequest(url)) SpiderDebug.log("server", "%s %s params=%s", session.getMethod(), url, session.getParms());
-        if (url.startsWith("/tvbus")) return ok(LiveConfig.getResp());
         if (url.startsWith("/device")) return ok(Device.get().toString());
         for (Process process : process) if (process.isRequest(session, url)) return process.doResponse(session, url, files);
         return getAssets(url.substring(1));

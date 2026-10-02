@@ -3,9 +3,7 @@ package com.fongmi.android.tv.remote;
 import android.text.TextUtils;
 
 import com.fongmi.android.tv.App;
-import com.fongmi.android.tv.api.config.LiveConfig;
 import com.fongmi.android.tv.api.config.VodConfig;
-import com.fongmi.android.tv.api.config.WallConfig;
 import com.fongmi.android.tv.bean.Config;
 import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.impl.Callback;
@@ -43,11 +41,8 @@ public final class RemoteConfigOps {
         if (TextUtils.isEmpty(url)) return RemoteCommandResult.failure("Missing config url");
         Config config = Config.find(url, type);
         if (config.isEmpty()) return RemoteCommandResult.failure("Config not found");
-        App.post(() -> {
-            if (type == 1) LiveConfig.load(config, new Callback());
-            else if (type == 2) WallConfig.load(config, new Callback());
-            else VodConfig.load(config, new Callback());
-        });
+        if (type != 0) return RemoteCommandResult.failure("Config type not supported");
+        App.post(() -> VodConfig.load(config, new Callback()));
         return RemoteCommandResult.success("Config switched", data());
     }
 
@@ -86,11 +81,9 @@ public final class RemoteConfigOps {
         JsonObject object = new JsonObject();
         JsonArray items = new JsonArray();
         List<String> keys = new ArrayList<>();
-        for (int type = 0; type <= 2; type++) {
-            for (Config config : Config.getAll(type)) addItem(items, keys, config, false);
-            Config current = current(type);
-            if (!current.isEmpty()) addItem(items, keys, current, true);
-        }
+        for (int type = 0; type <= 2; type++) for (Config config : Config.getAll(type)) addItem(items, keys, config, false);
+        Config current = current();
+        if (!current.isEmpty()) addItem(items, keys, current, true);
         object.add("items", items);
         return object;
     }
@@ -119,12 +112,10 @@ public final class RemoteConfigOps {
     }
 
     private static boolean isCurrent(Config config) {
-        return TextUtils.equals(current(config.getType()).getUrl(), config.getUrl());
+        return config.getType() == 0 && TextUtils.equals(current().getUrl(), config.getUrl());
     }
 
-    private static Config current(int type) {
-        if (type == 1) return LiveConfig.get().getConfig();
-        if (type == 2) return WallConfig.get().getConfig();
+    private static Config current() {
         return VodConfig.get().getConfig();
     }
 

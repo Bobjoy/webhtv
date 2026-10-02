@@ -25,15 +25,10 @@ import androidx.palette.graphics.Palette;
 
 import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.databinding.ViewWallBinding;
-import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
 import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.github.catvod.crawler.SpiderDebug;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,11 +83,6 @@ public class CustomWallView extends FrameLayout implements DefaultLifecycleObser
     protected void onDetachedFromWindow() {
         removeCallbacks(refreshRunnable);
         super.onDetachedFromWindow();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConfigEvent(ConfigEvent event) {
-        if (event.type() == ConfigEvent.Type.WALL) refresh();
     }
 
     private void refresh() {
@@ -336,11 +326,6 @@ public class CustomWallView extends FrameLayout implements DefaultLifecycleObser
     }
 
     @Override
-    public void onCreate(@NonNull LifecycleOwner owner) {
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public void onResume(@NonNull LifecycleOwner owner) {
         if (drawable != null) drawable.start();
         if (!hasVideo()) return;
@@ -359,7 +344,6 @@ public class CustomWallView extends FrameLayout implements DefaultLifecycleObser
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {
         removeCallbacks(refreshRunnable);
-        EventBus.getDefault().unregister(this);
         if (drawable != null) drawable.recycle();
         if (video != null) removeView(video);
         if (player != null) player.release();

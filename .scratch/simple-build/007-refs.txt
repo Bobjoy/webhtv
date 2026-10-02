@@ -1,0 +1,67 @@
+mobile/java/com/fongmi/android/tv/ui/dialog/HistoryDialog.java:16:import com.fongmi.android.tv.api.config.LiveConfig;
+mobile/java/com/fongmi/android/tv/ui/dialog/HistoryDialog.java:18:import com.fongmi.android.tv.api.config.WallConfig;
+mobile/java/com/fongmi/android/tv/ui/dialog/HistoryDialog.java:101:            case 1 -> LiveConfig.get().getConfig();
+mobile/java/com/fongmi/android/tv/ui/dialog/HistoryDialog.java:102:            case 2 -> WallConfig.get().getConfig();
+mobile/java/com/fongmi/android/tv/ui/dialog/ConfigDialog.java:20:import com.fongmi.android.tv.api.config.LiveConfig;
+mobile/java/com/fongmi/android/tv/ui/dialog/ConfigDialog.java:22:import com.fongmi.android.tv.api.config.WallConfig;
+mobile/java/com/fongmi/android/tv/ui/dialog/ConfigDialog.java:121:            case 1 -> LiveConfig.get().getConfig();
+mobile/java/com/fongmi/android/tv/ui/dialog/ConfigDialog.java:122:            case 2 -> WallConfig.get().getConfig();
+main/java/com/fongmi/android/tv/ui/dialog/CustomCspDialog.java:46:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/ui/dialog/CustomCspDialog.java:570:        if (LiveConfig.hasLoadedLives() || !LiveConfig.get().getConfig().isEmpty() || CustomCspSetting.hasLives()) LiveConfig.get().clear().config(LiveConfig.get().getConfig()).load(new Callback() {
+main/java/com/fongmi/android/tv/bean/Backup.java:8:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/bean/Backup.java:10:import com.fongmi.android.tv.api.config.WallConfig;
+main/java/com/fongmi/android/tv/bean/Backup.java:142:        LiveConfig.get().clear().init().load();
+main/java/com/fongmi/android/tv/bean/Backup.java:143:        WallConfig.get().init().load();
+main/java/com/fongmi/android/tv/server/Nano.java:3:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/server/Nano.java:82:        if (url.startsWith("/tvbus")) return ok(LiveConfig.getResp());
+main/java/com/fongmi/android/tv/server/process/Manage.java:7:import com.fongmi.android.tv.api.config.WallConfig;
+main/java/com/fongmi/android/tv/server/process/Manage.java:8:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/server/process/Manage.java:370:            case 1 -> LiveConfig.load(config, new Callback());
+main/java/com/fongmi/android/tv/server/process/Manage.java:371:            case 2 -> WallConfig.load(config, new Callback());
+main/java/com/fongmi/android/tv/server/process/Manage.java:412:            case 1 -> LiveConfig.get().getConfig();
+main/java/com/fongmi/android/tv/server/process/Manage.java:413:            case 2 -> WallConfig.get().getConfig();
+main/java/com/fongmi/android/tv/server/process/Manage.java:808:            if (LiveConfig.hasLoadedLives() || !LiveConfig.get().getConfig().isEmpty() || CustomCspSetting.hasLives()) LiveConfig.get().clear().config(LiveConfig.get().getConfig()).load(new Callback() {
+main/java/com/fongmi/android/tv/utils/AppBackup.java:4:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/utils/AppBackup.java:6:import com.fongmi.android.tv.api.config.WallConfig;
+main/java/com/fongmi/android/tv/utils/AppBackup.java:253:        LiveConfig.get().clear().init().load();
+main/java/com/fongmi/android/tv/utils/AppBackup.java:254:        WallConfig.get().init().load();
+main/java/com/fongmi/android/tv/api/config/ConfigActivator.java:16:                LiveConfig.load(config, callback);
+main/java/com/fongmi/android/tv/api/config/ConfigActivator.java:20:                WallConfig.load(config, callback);
+main/java/com/fongmi/android/tv/api/config/VodConfig.java:182:        boolean sync = LiveConfig.get().needSync(config.getUrl());
+main/java/com/fongmi/android/tv/api/config/VodConfig.java:183:        if (sync) LiveConfig.get().config(temp.update()).parse(object);
+main/java/com/fongmi/android/tv/api/config/VodConfig.java:190:        boolean sync = WallConfig.get().needSync(wall);
+main/java/com/fongmi/android/tv/api/config/VodConfig.java:191:        if (sync) WallConfig.get().config(temp.update());
+main/java/com/fongmi/android/tv/api/config/RuleConfig.java:34:        ads.addAll(LiveConfig.get().getAds());
+main/java/com/fongmi/android/tv/api/config/RuleConfig.java:37:        rules.addAll(LiveConfig.get().getRules());
+main/java/com/fongmi/android/tv/api/config/WallConfig.java:24:public class WallConfig extends BaseConfig {
+main/java/com/fongmi/android/tv/api/config/WallConfig.java:26:    private static final String TAG = WallConfig.class.getSimpleName();
+main/java/com/fongmi/android/tv/api/config/WallConfig.java:28:    public static WallConfig get() {
+main/java/com/fongmi/android/tv/api/config/WallConfig.java:44:    public WallConfig init() {
+main/java/com/fongmi/android/tv/api/config/WallConfig.java:48:    public WallConfig config(Config config) {
+main/java/com/fongmi/android/tv/api/config/WallConfig.java:133:        static volatile WallConfig INSTANCE = new WallConfig();
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:35:public class LiveConfig extends BaseConfig {
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:37:    private static final String TAG = LiveConfig.class.getSimpleName();
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:44:    public static LiveConfig get() {
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:84:    public LiveConfig init() {
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:88:    public LiveConfig config(Config config) {
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:95:    public LiveConfig clear() {
+main/java/com/fongmi/android/tv/api/config/LiveConfig.java:297:        static volatile LiveConfig INSTANCE = new LiveConfig();
+main/java/com/fongmi/android/tv/api/LiveApi.java:6:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/api/LiveApi.java:30:        LiveConfig.get().applyKeepsToGroups(item.getGroups());
+main/java/com/fongmi/android/tv/api/loader/BaseLoader.java:5:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/api/loader/BaseLoader.java:67:        Live live = LiveConfig.get().getLive(key);
+main/java/com/fongmi/android/tv/browse/LiveBrowse.java:10:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/browse/LiveBrowse.java:117:        LiveConfig.get().ensureLoaded();
+main/java/com/fongmi/android/tv/browse/LiveBrowse.java:118:        return LiveConfig.get().getHome();
+main/java/com/fongmi/android/tv/player/PlayerManager.java:7684:            MediaItem.LiveConfiguration liveConfiguration,
+main/java/com/fongmi/android/tv/player/extractor/TVBus.java:7:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/player/extractor/TVBus.java:57:        Core c = LiveConfig.get().getHome().getCore();
+main/java/com/fongmi/android/tv/player/engine/IjkSimplePlayer.java:205:            MediaItem.LiveConfiguration.Builder live =
+main/java/com/fongmi/android/tv/player/engine/IjkSimplePlayer.java:206:                    new MediaItem.LiveConfiguration.Builder();
+main/java/com/fongmi/android/tv/player/engine/IjkSimplePlayer.java:210:            builder.setLiveConfiguration(live.build());
+main/java/com/fongmi/android/tv/remote/RemoteConfigOps.java:6:import com.fongmi.android.tv.api.config.LiveConfig;
+main/java/com/fongmi/android/tv/remote/RemoteConfigOps.java:8:import com.fongmi.android.tv.api.config.WallConfig;
+main/java/com/fongmi/android/tv/remote/RemoteConfigOps.java:47:            if (type == 1) LiveConfig.load(config, new Callback());
+main/java/com/fongmi/android/tv/remote/RemoteConfigOps.java:48:            else if (type == 2) WallConfig.load(config, new Callback());
+main/java/com/fongmi/android/tv/remote/RemoteConfigOps.java:126:        if (type == 1) return LiveConfig.get().getConfig();
+main/java/com/fongmi/android/tv/remote/RemoteConfigOps.java:127:        if (type == 2) return WallConfig.get().getConfig();

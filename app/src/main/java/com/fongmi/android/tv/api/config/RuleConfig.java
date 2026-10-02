@@ -2,7 +2,6 @@ package com.fongmi.android.tv.api.config;
 
 import com.fongmi.android.tv.bean.Rule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RuleConfig {
@@ -30,12 +29,8 @@ public class RuleConfig {
     }
 
     private void merge() {
-        List<String> ads = new ArrayList<>(VodConfig.get().getAds());
-        ads.addAll(LiveConfig.get().getAds());
-        this.ads = ads;
-        List<Rule> rules = new ArrayList<>(VodConfig.get().getRules());
-        rules.addAll(LiveConfig.get().getRules());
-        this.rules = rules;
+        this.ads = VodConfig.get().getAds();
+        this.rules = VodConfig.get().getRules();
         dirty = false;
     }
 

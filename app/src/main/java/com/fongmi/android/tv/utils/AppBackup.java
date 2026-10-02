@@ -1,9 +1,7 @@
 package com.fongmi.android.tv.utils;
 
 import com.fongmi.android.tv.App;
-import com.fongmi.android.tv.api.config.LiveConfig;
 import com.fongmi.android.tv.api.config.VodConfig;
-import com.fongmi.android.tv.api.config.WallConfig;
 import com.fongmi.android.tv.api.loader.BaseLoader;
 import com.fongmi.android.tv.bean.Backup;
 import com.fongmi.android.tv.event.ConfigEvent;
@@ -250,8 +248,6 @@ public final class AppBackup {
     private static void reload() {
         BaseLoader.get().clear();
         VodConfig.get().clear().init().load(new Callback());
-        LiveConfig.get().clear().init().load();
-        WallConfig.get().init().load();
         ConfigEvent.common();
         RefreshEvent.keep();
         RefreshEvent.history();

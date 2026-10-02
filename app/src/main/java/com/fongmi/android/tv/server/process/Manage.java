@@ -4,8 +4,6 @@ import android.text.TextUtils;
 
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.Constant;
-import com.fongmi.android.tv.api.config.WallConfig;
-import com.fongmi.android.tv.api.config.LiveConfig;
 import com.fongmi.android.tv.api.config.VodConfig;
 import com.fongmi.android.tv.bean.Backup;
 import com.fongmi.android.tv.bean.Config;
@@ -351,11 +349,9 @@ public class Manage implements Process {
         }
         JsonObject object = new JsonObject();
         JsonArray items = new JsonArray();
-        for (int type = 0; type <= 2; type++) {
-            for (Config config : Config.getAll(type)) items.add(configObject(config, false));
-            Config current = currentConfig(type);
-            if (!current.isEmpty() && !containsConfig(items, current)) items.add(configObject(current, true));
-        }
+        for (int type = 0; type <= 2; type++) for (Config config : Config.getAll(type)) items.add(configObject(config, false));
+        Config current = currentConfig();
+        if (!current.isEmpty() && !containsConfig(items, current)) items.add(configObject(current, true));
         object.add("items", items);
         return json(object);
     }
@@ -366,11 +362,8 @@ public class Manage implements Process {
         if (TextUtils.isEmpty(url)) return Nano.error(Status.BAD_REQUEST, "Missing url");
         Config config = Config.find(url, type);
         if (config.isEmpty()) return Nano.error(Status.NOT_FOUND, "Config not found");
-        switch (type) {
-            case 1 -> LiveConfig.load(config, new Callback());
-            case 2 -> WallConfig.load(config, new Callback());
-            default -> VodConfig.load(config, new Callback());
-        }
+        if (type != 0) return Nano.error(Status.BAD_REQUEST, "Config type not supported");
+        VodConfig.load(config, new Callback());
         return configs(java.util.Collections.emptyMap());
     }
 
@@ -403,16 +396,11 @@ public class Manage implements Process {
     }
 
     private boolean isCurrentConfig(Config config) {
-        Config current = currentConfig(config.getType());
-        return current.getUrl().equals(config.getUrl());
+        return config.getType() == 0 && currentConfig().getUrl().equals(config.getUrl());
     }
 
-    private Config currentConfig(int type) {
-        return switch (type) {
-            case 1 -> LiveConfig.get().getConfig();
-            case 2 -> WallConfig.get().getConfig();
-            default -> VodConfig.get().getConfig();
-        };
+    private Config currentConfig() {
+        return VodConfig.get().getConfig();
     }
 
     private String configTypeName(int type) {
@@ -804,10 +792,6 @@ public class Manage implements Process {
     private void reloadConfigs() {
         App.post(() -> VodConfig.get().clear().config(VodConfig.get().getConfig()).load(new Callback() {
         }));
-        App.post(() -> {
-            if (LiveConfig.hasLoadedLives() || !LiveConfig.get().getConfig().isEmpty() || CustomCspSetting.hasLives()) LiveConfig.get().clear().config(LiveConfig.get().getConfig()).load(new Callback() {
-            });
-        });
     }
 
     private JsonArray array(Iterable<String> values) {

@@ -16,7 +16,6 @@ import com.fongmi.android.tv.server.Server;
 import com.fongmi.android.tv.service.DriveCheckService;
 import com.fongmi.android.tv.service.PlaybackService;
 import com.fongmi.android.tv.ui.activity.KeepActivity;
-import com.fongmi.android.tv.ui.activity.LiveActivity;
 import com.fongmi.android.tv.ui.activity.SearchActivity;
 import com.fongmi.android.tv.ui.activity.VideoActivity;
 import com.fongmi.android.tv.utils.ImgUtil;
@@ -119,7 +118,6 @@ public class HomeWebBridge {
                 case "player.status" -> WebCall.request(statusPayload());
                 case "app.search" -> search(payload);
                 case "app.openVod" -> openVod();
-                case "app.openLive" -> openLive();
                 case "app.openKeep" -> openKeep();
                 case "app.openSetting" -> openSetting();
                 case "app.history" -> history();
@@ -299,11 +297,6 @@ public class HomeWebBridge {
             if (direct) SearchActivity.direct(activity, keyword, null, pic, wall);
             else SearchActivity.start(activity, keyword, null, pic, wall);
         });
-        return "{}";
-    }
-
-    private String openLive() {
-        App.post(() -> LiveActivity.start(activity));
         return "{}";
     }
 

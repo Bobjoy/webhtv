@@ -1,11 +1,11 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
     <!-- App -->
-    <string name="app_name">TV</string>
+    <string name="app_name">今日影视</string>
 
     <!-- Live -->
     <string name="live_pass">Pass</string>
-    <string name="live_refresh">Refresh</string>
+    <string name="vod_refresh">Refresh</string>
     <string name="live_line">Line <xliff:g name="name">%s</xliff:g></string>
     <string name="live_control_source">Live source</string>
     <string name="live_no_epg">00:00 - 23:59 暂无节目信息</string>
@@ -678,6 +678,20 @@
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
     <string name="setting_cache">Cache</string>
+    <string name="menu_clear_cache">Clear cache</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="source_fetching">Fetching VOD sources…</string>
+    <string name="menu_update_source">Update sources</string>
+    <string name="source_updating">Updating sources…</string>
+    <string name="source_updated">Sources updated</string>
+    <string name="source_update_failed">Source update failed</string>
+    <string name="gate_title">Startup passcode</string>
+    <string name="gate_message">Enter the 4-digit startup passcode to use the app.</string>
+    <string name="gate_code">Passcode</string>
+    <string name="gate_enter">Enter</string>
+    <string name="gate_code_required">Enter the 4-digit passcode</string>
+    <string name="gate_wrong_code">Wrong passcode, please try again</string>
+    <string name="gate_unreachable">Network unavailable, please try again later</string>
     <string name="setting_backup">Backup</string>
     <string name="setting_restore">Restore</string>
     <string name="setting_about">About</string>
@@ -1206,7 +1220,7 @@
     <string name="update_settings_source">Download method</string>
     <string name="update_source_github">GitHub</string>
     <string name="update_source_oci">OCI</string>
-    <string name="update_github_proxy">GitHub proxy (update and subscription)</string>
+    <string name="update_github_proxy">GitHub proxy</string>
     <string name="update_github_proxy_value">GitHub proxy · %1$s</string>
     <string name="update_oci_mirror">OCI Registry mirror</string>
     <string name="update_oci_mirror_value">OCI mirror · %1$s</string>
@@ -1544,29 +1558,6 @@
 
     <string name="player_audio_badge_queue">Queue</string>
     <string name="player_audio_repeat">Repeat</string>
-    <!-- Subscription -->
-    <string name="setting_subscription">Subscription</string>
-    <string name="subscription_add">Add</string>
-    <string name="subscription_empty">No subscription yet</string>
-    <string name="subscription_name">Subscription name, optional</string>
-    <string name="subscription_url">Subscription URL</string>
-    <string name="subscription_url_required">Enter subscription URL</string>
-    <string name="subscription_duplicated">This subscription URL already exists</string>
-    <string name="subscription_pull">Pull</string>
-    <string name="subscription_load_failed">Failed to pull subscription</string>
-    <string name="subscription_edit_locked">Built-in subscription cannot be edited</string>
-    <string name="subscription_update">Update subscriptions</string>
-    <string name="subscription_updating">Updating subscriptions…</string>
-    <string name="subscription_update_done">Updated %1$d of %2$d subscriptions</string>
-    <string name="subscription_gate_title">Enable subscriptions</string>
-    <string name="subscription_gate_message">Subscription is hidden by default. Enter the 4-digit passcode to enable it; a restart takes effect.</string>
-    <string name="subscription_gate_code">Passcode</string>
-    <string name="subscription_gate_enable">Enable</string>
-    <string name="subscription_gate_code_required">Enter the 4-digit passcode</string>
-    <string name="subscription_gate_wrong_code">Wrong passcode</string>
-    <string name="subscription_gate_unreachable">Cannot reach the verification service. Check the network or the GitHub accelerator setting.</string>
-    <string name="subscription_gate_unlocked">Enabled, restarting…</string>
-    <string name="subscription_in_use">In use</string>
 
     <!-- GitHub accelerator -->
     <string name="setting_github_proxy">GitHub accelerator</string>

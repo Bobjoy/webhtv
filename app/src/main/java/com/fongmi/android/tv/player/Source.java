@@ -14,7 +14,6 @@ import com.fongmi.android.tv.player.extractor.MpdEdlResolver;
 import com.fongmi.android.tv.player.extractor.MpdSanitizer;
 import com.fongmi.android.tv.player.extractor.Push;
 import com.fongmi.android.tv.player.extractor.Strm;
-import com.fongmi.android.tv.player.extractor.TVBus;
 import com.fongmi.android.tv.player.extractor.Thunder;
 import com.fongmi.android.tv.player.extractor.Video;
 import com.fongmi.android.tv.player.extractor.Youtube;
@@ -44,7 +43,6 @@ public class Source {
         extractors.add(new Push());
         extractors.add(new Strm());
         extractors.add(new Thunder());
-        extractors.add(new TVBus());
         extractors.add(new Video());
         extractors.add(new Youtube());
     }

@@ -278,11 +278,8 @@ public class PlaybackService extends MediaLibraryService implements MediaLibrary
         } else if (session == null) {
             return;
         } else if (event.isVod()) {
-            BrowseTree.clearVod();
+            BrowseTree.clear();
             session.notifyChildrenChanged("VOD", 0, null);
-        } else if (event.isLive()) {
-            BrowseTree.clearLive();
-            session.notifyChildrenChanged("LIVE", 0, null);
         }
     }
 

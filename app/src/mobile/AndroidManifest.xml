@@ -19,6 +19,17 @@
     <application>
 
         <activity
+            android:name=".ui.activity.GateActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Splash"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.activity.HomeActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
@@ -26,10 +37,6 @@
             android:screenOrientation="fullUser"
             android:theme="@style/Theme.Splash"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -51,7 +58,6 @@
                 <data android:scheme="file" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="audio/*" />
-                <data android:mimeType="text/plain" />
                 <data android:mimeType="application/x-bittorrent" />
             </intent-filter>
             <intent-filter>
@@ -108,26 +114,7 @@
             android:screenOrientation="fullUser" />
 
         <activity
-            android:name=".ui.activity.LiveActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|uiMode|orientation"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.activity.HomeActivity"
-            android:screenOrientation="fullUser"
-            android:supportsPictureInPicture="true" />
-
-        <activity
             android:name=".ui.activity.ScanActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout"
-            android:screenOrientation="fullUser" />
-
-        <activity
-            android:name=".ui.activity.SubscriptionActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout"
-            android:screenOrientation="fullUser" />
-
-        <activity
-            android:name=".ui.activity.SubscriptionItemActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout"
             android:screenOrientation="fullUser" />
 

@@ -35,32 +35,27 @@
             <item
                 android:id="@+id/refresh"
                 android:icon="@drawable/ic_popup_refresh"
-                android:title="@string/live_refresh" />
+                android:title="@string/vod_refresh" />
 
             <item
-                android:id="@+id/keep"
-                android:icon="@drawable/ic_popup_keep"
-                android:title="@string/app_keep" />
-
-            <item
-                android:id="@+id/sync"
+                android:id="@+id/update_source"
                 android:icon="@drawable/ic_popup_sync"
-                android:title="@string/setting_one_key_sync" />
+                android:title="@string/menu_update_source" />
 
             <item
-                android:id="@+id/push_apk"
+                android:id="@+id/clear_cache"
+                android:icon="@drawable/ic_popup_delete"
+                android:title="@string/menu_clear_cache" />
+
+            <item
+                android:id="@+id/github_proxy"
+                android:icon="@drawable/ic_git_cloud_download"
+                android:title="@string/update_github_proxy" />
+
+            <item
+                android:id="@+id/check_update"
                 android:icon="@drawable/ic_popup_apk"
-                android:title="@string/menu_push_apk" />
-
-            <item
-                android:id="@+id/push_play"
-                android:icon="@drawable/ic_popup_push"
-                android:title="@string/menu_push_play" />
-
-            <item
-                android:id="@+id/enhance"
-                android:icon="@drawable/ic_popup_enhance"
-                android:title="@string/setting_enhance" />
+                android:title="@string/about_check_update" />
         </menu>
     </item>
 

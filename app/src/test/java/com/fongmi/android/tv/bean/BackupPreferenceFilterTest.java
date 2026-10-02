@@ -114,20 +114,9 @@ public class BackupPreferenceFilterTest {
     }
 
     @Test
-    public void subscriptionListFollowsAppSettingsSync() {
-        SyncOptions settings = new SyncOptions().config(false).spider(false).settings(true);
-        SyncOptions configOnly = new SyncOptions().config(true).spider(false).settings(false);
-
-        assertTrue(Backup.include("subscription", settings));
-        assertFalse(Backup.include("subscription", configOnly));
-    }
-
-    @Test
-    public void subscriptionGateStaysDeviceLocal() {
+    public void githubProxyGoodStaysDeviceLocal() {
         SyncOptions everything = new SyncOptions().config(true).spider(true).webHome(true).settings(true);
 
-        assertFalse(Backup.include("subscription_gate", everything));
-        assertFalse(Backup.include("subscription_active_0", everything));
         assertFalse(Backup.include("update_github_proxy_good", everything));
     }
 

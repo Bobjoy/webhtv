@@ -1,7 +1,6 @@
 package com.fongmi.android.tv.browse;
 
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -18,35 +17,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BrowseTree {
 
-    private static final String CONTENT_STYLE_BROWSABLE_HINT = "android.media.browse.CONTENT_STYLE_BROWSABLE_HINT";
-    private static final int CONTENT_STYLE_LIST = 1;
-
     private static final String ROOT = "ROOT";
     private static final String VOD = "VOD";
-    private static final String LIVE = "LIVE";
     private static final Map<String, Result> browseResultMap = new ConcurrentHashMap<>();
     private static final MediaItem ROOT_ITEM = folder(ROOT, "影視");
     private static final MediaItem VOD_FOLDER = folder(VOD, "點播");
-    private static final MediaItem LIVE_FOLDER;
-
-    static {
-        Bundle extras = new Bundle();
-        extras.putInt(CONTENT_STYLE_BROWSABLE_HINT, CONTENT_STYLE_LIST);
-        MediaMetadata meta = new MediaMetadata.Builder().setTitle("直播").setIsBrowsable(true).setIsPlayable(false).setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED).setExtras(extras).build();
-        LIVE_FOLDER = new MediaItem.Builder().setMediaId(LIVE).setMediaMetadata(meta).build();
-    }
 
     public static void clear() {
-        clearVod();
-        clearLive();
-    }
-
-    public static void clearVod() {
         VodBrowse.clear();
-    }
-
-    public static void clearLive() {
-        LiveBrowse.clear();
     }
 
     public static MediaItem getRootItem() {
@@ -56,13 +34,9 @@ public class BrowseTree {
     @NonNull
     public static ImmutableList<MediaItem> getChildren(@NonNull String parentId) {
         return switch (parentId) {
-            case ROOT -> ImmutableList.of(VOD_FOLDER, LIVE_FOLDER);
+            case ROOT -> ImmutableList.of(VOD_FOLDER);
             case VOD -> VodBrowse.getHistory();
-            case LIVE -> LiveBrowse.getGroups();
-            default -> {
-                if (parentId.startsWith(LiveBrowse.LIVE_GROUP)) yield LiveBrowse.getChannels(parentId);
-                yield ImmutableList.of();
-            }
+            default -> ImmutableList.of();
         };
     }
 
@@ -71,11 +45,7 @@ public class BrowseTree {
         return switch (mediaId) {
             case ROOT -> ROOT_ITEM;
             case VOD -> VOD_FOLDER;
-            case LIVE -> LIVE_FOLDER;
-            default -> {
-                if (mediaId.startsWith(LiveBrowse.LIVE_GROUP)) yield folder(mediaId, mediaId.substring(LiveBrowse.LIVE_GROUP.length()));
-                yield null;
-            }
+            default -> null;
         };
     }
 
@@ -91,7 +61,6 @@ public class BrowseTree {
 
     @Nullable
     public static MediaItem resolve(@NonNull String mediaId) throws Exception {
-        if (mediaId.startsWith(LiveBrowse.LIVE_CH)) return LiveBrowse.resolve(mediaId);
         return VodBrowse.resolve(mediaId);
     }
 
@@ -107,9 +76,7 @@ public class BrowseTree {
 
     @Nullable
     public static MediaItem navigate(@NonNull String mediaId, int delta) throws Exception {
-        MediaItem vod = VodBrowse.navigate(mediaId, delta);
-        if (vod != null) return vod;
-        return LiveBrowse.navigate(mediaId, delta);
+        return VodBrowse.navigate(mediaId, delta);
     }
 
     public static long consumeResumePosition() {

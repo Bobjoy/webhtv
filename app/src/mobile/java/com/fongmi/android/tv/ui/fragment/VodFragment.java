@@ -1,6 +1,5 @@
 package com.fongmi.android.tv.ui.fragment;
 
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -23,10 +20,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.R;
+import com.fongmi.android.tv.Updater;
 import com.fongmi.android.tv.api.config.VodConfig;
+import com.fongmi.android.tv.api.subscription.BuiltinSource;
 import com.fongmi.android.tv.bean.Class;
 import com.fongmi.android.tv.bean.Config;
-import com.fongmi.android.tv.bean.Device;
 import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.bean.Value;
@@ -36,30 +34,23 @@ import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
 import com.fongmi.android.tv.event.StateEvent;
 import com.fongmi.android.tv.impl.Callback;
-import com.fongmi.android.tv.impl.ConfigListener;
 import com.fongmi.android.tv.impl.FilterListener;
 import com.fongmi.android.tv.impl.SiteListener;
 import com.fongmi.android.tv.model.SiteViewModel;
 import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.ui.activity.HomeActivity;
 import com.fongmi.android.tv.ui.activity.HistoryActivity;
-import com.fongmi.android.tv.ui.activity.KeepActivity;
 import com.fongmi.android.tv.ui.activity.SearchActivity;
 import com.fongmi.android.tv.ui.adapter.TypeAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
-import com.fongmi.android.tv.ui.dialog.ApkPushDialog;
-import com.fongmi.android.tv.ui.dialog.ApkPushMethodDialog;
-import com.fongmi.android.tv.ui.dialog.ApkPushUrlDialog;
 import com.fongmi.android.tv.ui.dialog.FilterDialog;
-import com.fongmi.android.tv.ui.dialog.HistoryDialog;
+import com.fongmi.android.tv.ui.dialog.GithubProxyDialog;
 import com.fongmi.android.tv.ui.dialog.LinkDialog;
-import com.fongmi.android.tv.ui.dialog.OneKeySyncDialog;
-import com.fongmi.android.tv.ui.dialog.PushPlayDialog;
-import com.fongmi.android.tv.ui.dialog.PushPlayUrlDialog;
 import com.fongmi.android.tv.ui.dialog.ReceiveDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
 import com.fongmi.android.tv.ui.dialog.TypeDialog;
 import com.fongmi.android.tv.utils.ImgUtil;
+import com.fongmi.android.tv.utils.FileUtil;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
 import com.fongmi.android.tv.web.HomeWebController;
@@ -76,9 +67,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class VodFragment extends BaseFragment implements ConfigListener, SiteListener, FilterListener, TypeAdapter.OnClickListener, HomeWebController.Listener {
+public class VodFragment extends BaseFragment implements SiteListener, FilterListener, TypeAdapter.OnClickListener, HomeWebController.Listener {
 
-    private final ActivityResultLauncher<String[]> apkLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::onApkSelected);
 
     private FragmentVodBinding mBinding;
     private SiteViewModel mViewModel;
@@ -87,7 +77,6 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     private Result mResult;
     private String mChromeMode = WebHomeChrome.NORMAL;
     private int mHomeWebTopMargin;
-    private Device pendingApkDevice;
 
     public static VodFragment newInstance() {
         return new VodFragment();
@@ -127,14 +116,12 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     @Override
     protected void initEvent() {
         mBinding.top.setOnClickListener(this::onTop);
-        mBinding.logo.setOnClickListener(this::onLogo);
-        mBinding.link.setOnClickListener(this::onLink);
         mBinding.title.setOnClickListener(this::onSite);
         mBinding.title.setOnLongClickListener(this::reloadConfig);
         mBinding.typeMore.setOnTouchListener(this::onTypeMoreTouch);
         mBinding.typeMore.setOnClickListener(this::onTypeMore);
         mBinding.filter.setOnClickListener(this::onFilter);
-        mBinding.filter.setOnLongClickListener(this::onLink);
+        mBinding.link.setOnClickListener(this::onLink);
         mBinding.toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
         mBinding.toolbar.post(this::setSearchLongClick);
         mBinding.appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -195,25 +182,14 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     }
 
     private void setFabVisible(int position) {
-        if (isNativeChromeHidden()) {
-            mBinding.top.setVisibility(View.GONE);
-            mBinding.link.setVisibility(View.GONE);
-            mBinding.filter.setVisibility(View.GONE);
-            return;
-        }
-        if (mAdapter.getItemCount() == 0) {
-            mBinding.top.setVisibility(View.INVISIBLE);
-            mBinding.link.setVisibility(View.VISIBLE);
-            mBinding.filter.setVisibility(View.GONE);
-        } else if (!mAdapter.get(position).getFilters().isEmpty()) {
-            mBinding.top.setVisibility(View.INVISIBLE);
-            mBinding.link.setVisibility(View.GONE);
-            mBinding.filter.show();
-        } else if (position == 0 || mAdapter.get(position).getFilters().isEmpty()) {
-            mBinding.top.setVisibility(View.INVISIBLE);
-            mBinding.filter.setVisibility(View.GONE);
-            mBinding.link.show();
-        }
+        boolean hidden = isNativeChromeHidden();
+        mBinding.top.setVisibility(hidden ? View.GONE : View.INVISIBLE);
+        boolean hasFilter = !hidden && mAdapter.getItemCount() > 0 && !mAdapter.get(position).getFilters().isEmpty();
+        if (hasFilter) mBinding.filter.show();
+        else mBinding.filter.setVisibility(View.GONE);
+        boolean showLink = !hidden && !hasFilter;
+        if (showLink) mBinding.link.show();
+        else mBinding.link.setVisibility(View.GONE);
     }
 
     private void setTitle() {
@@ -226,12 +202,6 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
         getFragment().scrollToTop();
         mBinding.top.setVisibility(View.INVISIBLE);
         if (mBinding.filter.getVisibility() == View.INVISIBLE) mBinding.filter.show();
-        else if (mBinding.link.getVisibility() == View.INVISIBLE) mBinding.link.show();
-    }
-
-    private boolean onLink(View view) {
-        LinkDialog.show(this);
-        return true;
     }
 
     private void onTypeMore(View view) {
@@ -247,10 +217,6 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
             view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start();
         }
         return false;
-    }
-
-    private void onLogo(View view) {
-        HistoryDialog.create().vod().readOnly().show(this);
     }
 
     private void onSite(View view) {
@@ -286,56 +252,31 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
         if (mAdapter.getItemCount() > 0) FilterDialog.create().filter(mAdapter.get(mBinding.pager.getCurrentItem()).getFilters()).show(this);
     }
 
+    private boolean onLink(View view) {
+        LinkDialog.show(this);
+        return true;
+    }
+
     private boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.refresh) {
             if (mWeb != null && mWeb.isVisible()) mWeb.reload();
             else homeContent();
-        } else if (item.getItemId() == R.id.keep) KeepActivity.start(requireActivity());
+        } else if (item.getItemId() == R.id.update_source) {
+            Notify.show(R.string.source_updating);
+            BuiltinSource.refresh(getConfig(), ok -> App.post(() -> Notify.show(ok ? R.string.source_updated : R.string.source_update_failed)));
+        } else if (item.getItemId() == R.id.clear_cache) FileUtil.clearCache(new Callback() {
+            @Override
+            public void success() {
+                Notify.show(R.string.cache_cleared);
+            }
+        });
         else if (item.getItemId() == R.id.search) SearchActivity.start(requireActivity());
         else if (item.getItemId() == R.id.history) HistoryActivity.start(requireActivity());
-        else if (item.getItemId() == R.id.sync) OneKeySyncDialog.create().show(requireActivity());
-        else if (item.getItemId() == R.id.push_apk) ApkPushDialog.create().listener(this::onApkDeviceSelected).show(requireActivity());
-        else if (item.getItemId() == R.id.push_play) PushPlayDialog.create().listener(this::onPushPlayDeviceSelected).show(requireActivity());
-        else if (item.getItemId() == R.id.enhance && homeActivity() != null) homeActivity().openEnhanceFromVod();
+        else if (item.getItemId() == R.id.github_proxy) GithubProxyDialog.create().show(requireActivity());
+        else if (item.getItemId() == R.id.check_update) Updater.create().force().start(requireActivity());
         else if (item.getItemId() == R.id.web_home_fullscreen) onWebHomeFullscreen();
         else return false;
         return true;
-    }
-
-    private void onApkSelected(Uri uri) {
-        Device device = pendingApkDevice;
-        pendingApkDevice = null;
-        if (uri != null && device != null) ApkPushDialog.create(device, uri).show(requireActivity());
-    }
-
-    private void onApkDeviceSelected(Device device) {
-        App.post(() -> {
-            if (!isAdded()) return;
-            ApkPushMethodDialog.create(device).listener(new ApkPushMethodDialog.Listener() {
-                @Override
-                public void onLocal(Device device) {
-                    selectLocalApk(device);
-                }
-
-                @Override
-                public void onLink(Device device) {
-                    ApkPushUrlDialog.create(device).show(requireActivity());
-                }
-            }).show(requireActivity());
-        });
-    }
-
-    private void selectLocalApk(Device device) {
-        pendingApkDevice = device;
-        App.post(() -> {
-            if (isAdded()) apkLauncher.launch(new String[]{"application/vnd.android.package-archive", "application/octet-stream"});
-        });
-    }
-
-    private void onPushPlayDeviceSelected(Device device) {
-        App.post(() -> {
-            if (isAdded()) PushPlayUrlDialog.create(device).show(requireActivity());
-        });
     }
 
     private void onWebHomeFullscreen() {
@@ -363,10 +304,11 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
 
     private void showProgress() {
         mBinding.progress.getRoot().setVisibility(View.VISIBLE);
+        mBinding.progress.hint.setVisibility(BuiltinSource.isPending() ? View.VISIBLE : View.GONE);
     }
 
     private void hideProgress() {
-        mBinding.progress.getRoot().setVisibility(View.GONE);
+        mBinding.progress.getRoot().setVisibility(BuiltinSource.isPending() ? View.VISIBLE : View.GONE);
     }
 
     private void hideContent() {
@@ -473,26 +415,6 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCastEvent(CastEvent event) {
         ReceiveDialog.create().event(event).show(this);
-    }
-
-    @Override
-    public void setConfig(Config config) {
-        VodConfig.load(config, new Callback() {
-            @Override
-            public void start() {
-                showProgress();
-                hideContent();
-                setTitle();
-                setLogo();
-            }
-
-            @Override
-            public void error(String msg) {
-                Notify.dismiss();
-                Notify.show(msg);
-                showContent();
-            }
-        });
     }
 
     @Override
@@ -612,11 +534,6 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     public void openVod() {
         HomeActivity activity = homeActivity();
         if (activity != null) activity.openVod();
-    }
-
-    @Override
-    public void openSetting() {
-        if (getActivity() instanceof HomeActivity) ((HomeActivity) getActivity()).change(1);
     }
 
     private void hideNativeContent() {
