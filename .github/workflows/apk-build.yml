@@ -50,15 +50,13 @@ jobs:
         run: sdkmanager "platform-tools" "platforms;android-37.0" "build-tools;37.0.0"
 
       # No signing secrets in this fork: release variants fall back to signingConfigs.debug.
-      - name: Build four release APKs
+      - name: Build release APKs
         run: |
           chmod +x ./gradlew
           rm -rf Release/apk
           ./gradlew \
             :app:assembleMobileArm64_v8aRelease \
             :app:assembleMobileArmeabi_v7aRelease \
-            :app:assembleLeanbackArm64_v8aRelease \
-            :app:assembleLeanbackArmeabi_v7aRelease \
             --no-daemon
 
       - name: Upload APKs
